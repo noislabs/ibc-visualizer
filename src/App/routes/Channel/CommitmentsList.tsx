@@ -26,28 +26,32 @@ export function CommitmentsList({ connectionId, portId, channelId }: Commitments
     })();
   }, [getClient, portId, channelId]);
 
-  return packetCommitmentsResponse?.commitments?.length ? (
-    <div className="flex flex-col m-2 ml-0">
+  return (
+    <>
       <span className={style.subtitle}>Packet commitments</span>
-      <div className="flex flex-row flex-wrap">
-        {packetCommitmentsResponse.commitments.map((commitment, index) => {
-          const portIdChannelId = `${commitment.portId}${portIdChannelIdSeparator}${commitment.channelId}`;
-          const paramChannel = `${pathChannels}/${portIdChannelId}`;
-          const paramCommitment = `${pathCommitments}/${commitment.sequence}`;
+      {packetCommitmentsResponse?.commitments?.length ? (
+        <div className="flex flex-col m-2 ml-0">
+          <div className="flex flex-row flex-wrap">
+            {packetCommitmentsResponse.commitments.map((commitment, index) => {
+              const portIdChannelId = `${commitment.portId}${portIdChannelIdSeparator}${commitment.channelId}`;
+              const paramChannel = `${pathChannels}/${portIdChannelId}`;
+              const paramCommitment = `${pathCommitments}/${commitment.sequence}`;
 
-          return (
-            <Link
-              to={`${paramConnection}${paramChannel}${paramCommitment}`}
-              key={index}
-              className={style.link}
-            >
-              <span>#{commitment.sequence.toString(10)}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </div>
-  ) : (
-    <div className={style.subtitle}>No commitments found</div>
+              return (
+                <Link
+                  to={`${paramConnection}${paramChannel}${paramCommitment}`}
+                  key={index}
+                  className={style.link}
+                >
+                  <span>#{commitment.sequence.toString(10)}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div>No commitments found</div>
+      )}
+    </>
   );
 }
