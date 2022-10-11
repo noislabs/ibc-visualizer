@@ -1,5 +1,5 @@
 export const style = {
-  title: "text-xl font-bold",
+  title: "text-xl font-bold mb-2",
   subtitle: "text-lg font-bold",
   button: "rounded mr-2 mb-2 p-2 bg-purple-800 hover:bg-purple-700 font-bold",
   link: "mr-2 mb-2 underline text-purple-500 hover:text-purple-400 font-bold",

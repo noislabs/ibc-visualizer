@@ -1,8 +1,7 @@
 import { toHex } from "@cosmjs/encoding";
-import React, { useEffect, useState } from "react";
+import { QueryChannelResponse } from "cosmjs-types/ibc/core/channel/v1/query";
+import React from "react";
 
-import { useClient } from "../../../contexts/ClientContext";
-import { IbcChannelResponse } from "../../../types/ibc";
 import { printIbcChannelState, printIbcOrder } from "../../../utils/ibc";
 import { CounterpartyData } from "../../components/ChannelCounterpartyData";
 import { HeightData } from "../../components/HeightData";
@@ -11,24 +10,15 @@ import { style } from "../../style";
 interface ChannelDataProps {
   readonly portId: string;
   readonly channelId: string;
+  readonly channelResponse: QueryChannelResponse;
 }
 
-export function ChannelData({ portId, channelId }: ChannelDataProps): JSX.Element {
-  const { getClient } = useClient();
-  const [channelResponse, setChannelResponse] = useState<IbcChannelResponse>();
-
-  useEffect(() => {
-    (async function updateChannelResponse() {
-      const channelResponse = await getClient().ibc.channel.channel(portId, channelId);
-      setChannelResponse(channelResponse);
-    })();
-  }, [getClient, portId, channelId]);
-
-  return channelResponse?.channel ? (
+export function ChannelData({ portId, channelId, channelResponse }: ChannelDataProps): JSX.Element {
+  return channelResponse.channel ? (
     <div>
-      <div className={style.title}>Data</div>
-      {portId && <div>Port ID: {portId}</div>}
-      {channelId && <div>Channel ID: {channelId}</div>}
+      <strong>Data</strong>
+      <div>Port ID: {portId}</div>
+      <div>Channel ID: {channelId}</div>
       <div>Proof: {channelResponse.proof?.length ? toHex(channelResponse.proof) : "–"}</div>
       <HeightData height={channelResponse.proofHeight} />
       <div className="flex flex-col">

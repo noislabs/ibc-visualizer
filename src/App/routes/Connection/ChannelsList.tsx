@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { portIdChannelIdSeparator } from "../..";
 import { useClient } from "../../../contexts/ClientContext";
 import { IbcChannelsResponse, IbcConnectionChannelsResponse } from "../../../types/ibc";
-import { ellideMiddle } from "../../../utils/strings";
+import { printChannelName } from "../../../utils/ibc";
 import { pathChannels, pathConnections } from "../../paths";
 import { style } from "../../style";
 
@@ -47,17 +47,14 @@ export function ChannelsList({ connectionId }: ChannelsListProps): JSX.Element {
   return channelsResponse?.channels?.length ? (
     <div>
       <span className={style.title}>Channels</span>
-      <div className="flex flex-row flex-wrap">
+      <div className="flex flex-col flex-wrap">
         {channelsResponse.channels.map((channel, index) => {
           const portIdChannelId = `${channel.portId}${portIdChannelIdSeparator}${channel.channelId}`;
           const paramChannel = `${pathChannels}/${portIdChannelId}`;
 
           return (
             <Link to={`${paramConnection}${paramChannel}`} key={index} className={style.link}>
-              <span>{`${ellideMiddle(channel.portId ?? "–", 20)} | ${ellideMiddle(
-                channel.channelId ?? "–",
-                20,
-              )}`}</span>
+              {printChannelName(channel)}
             </Link>
           );
         })}

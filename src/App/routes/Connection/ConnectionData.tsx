@@ -25,7 +25,7 @@ export function ConnectionData({ connectionId }: ConnectionDataProps): JSX.Eleme
 
   return connectionResponse?.connection ? (
     <div>
-      <div className={style.title}>Data</div>
+      <strong>Data</strong>
       {connectionId && <div>Connection ID: {connectionId}</div>}
       <div>Proof: {connectionResponse.proof?.length ? toHex(connectionResponse.proof) : "–"}</div>
       <HeightData height={connectionResponse.proofHeight} />

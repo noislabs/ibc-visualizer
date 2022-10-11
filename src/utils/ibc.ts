@@ -1,3 +1,5 @@
+import { Channel, IdentifiedChannel } from "cosmjs-types/ibc/core/channel/v1/channel";
+
 import { IbcChannelState, IbcConnectionState, IbcOrder } from "../types/ibc";
 
 export function printIbcConnectionState(state: IbcConnectionState): string {
@@ -37,4 +39,12 @@ export function printIbcOrder(order: IbcOrder): string {
     default:
       return "Unspecified";
   }
+}
+
+export function printChannelName(channel: IdentifiedChannel): string {
+  return printChannelName2(channel.channelId, channel);
+}
+
+export function printChannelName2(channelId: string, channel: Channel): string {
+  return `${channelId} ⧟ ${channel.counterparty?.channelId ?? "–"}`;
 }
