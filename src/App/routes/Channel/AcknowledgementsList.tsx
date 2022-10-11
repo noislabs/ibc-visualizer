@@ -21,7 +21,7 @@ export function AcknowledgementsList({
   const paramConnection = `${pathConnections}/${connectionId}`;
 
   const { getClient } = useClient();
-  const [acknowledgements, setAcknowledgements] = useState<PacketState[]>([]);
+  const [acknowledgements, setAcknowledgements] = useState<"loading" | readonly PacketState[]>("loading");
 
   useEffect(() => {
     (async function updatePacketAcknowledgementsResponse() {
@@ -37,28 +37,34 @@ export function AcknowledgementsList({
     })();
   }, [getClient, portId, channelId]);
 
-  return acknowledgements.length ? (
-    <div className="flex flex-col m-2 ml-0">
+  return (
+    <>
       <span className={style.subtitle}>Packet acknowledgements</span>
-      <div className="flex flex-row flex-wrap">
-        {acknowledgements.map((acknowledgement, index) => {
-          const portIdChannelId = `${acknowledgement.portId}${portIdChannelIdSeparator}${acknowledgement.channelId}`;
-          const paramChannel = `${pathChannels}/${portIdChannelId}`;
-          const paramAcknowledgement = `${pathAcknowledgements}/${acknowledgement.sequence}`;
+      {acknowledgements === "loading" ? (
+        <div>Loading acknowledgements …</div>
+      ) : acknowledgements.length === 0 ? (
+        <div>No acknowledgements found</div>
+      ) : (
+        <div className="flex flex-col m-2 ml-0">
+          <div className="flex flex-row flex-wrap">
+            {acknowledgements.map((acknowledgement, index) => {
+              const portIdChannelId = `${acknowledgement.portId}${portIdChannelIdSeparator}${acknowledgement.channelId}`;
+              const paramChannel = `${pathChannels}/${portIdChannelId}`;
+              const paramAcknowledgement = `${pathAcknowledgements}/${acknowledgement.sequence}`;
 
-          return (
-            <Link
-              to={`${paramConnection}${paramChannel}${paramAcknowledgement}`}
-              key={index}
-              className={style.link}
-            >
-              <span>#{acknowledgement.sequence.toString(10)}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </div>
-  ) : (
-    <div className={style.subtitle}>No acknowledgements found</div>
+              return (
+                <Link
+                  to={`${paramConnection}${paramChannel}${paramAcknowledgement}`}
+                  key={index}
+                  className={style.link}
+                >
+                  <span>#{acknowledgement.sequence.toString(10)}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
