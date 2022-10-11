@@ -25,7 +25,7 @@ export function Channel(): JSX.Element {
   const [portId, channelId] = portIdChannelId.split(portIdChannelIdSeparator);
   const { getClient } = useClient();
 
-  const [sequence, setSequence] = useState<number>();
+  const [searchSequence, setSearchSequence] = useState<number>();
   const [channelResponse, setChannelResponse] = useState<IbcChannelResponse>();
 
   useEffect(() => {
@@ -47,11 +47,11 @@ export function Channel(): JSX.Element {
       <NextSequenceReceiveData portId={portId} channelId={channelId} />
       <CommitmentsList connectionId={connectionId} portId={portId} channelId={channelId} />
       <AcknowledgementsList connectionId={connectionId} portId={portId} channelId={channelId} />
-      <SequenceForm sequence={sequence} setSequence={setSequence} />
-      {sequence ? (
+      <SequenceForm sequence={searchSequence} setSequence={setSearchSequence} />
+      {searchSequence !== undefined ? (
         <>
-          <UnreceivedPacketsList portId={portId} channelId={channelId} sequence={sequence} />
-          <UnreceivedAcksList portId={portId} channelId={channelId} sequence={sequence} />
+          <UnreceivedPacketsList portId={portId} channelId={channelId} sequence={searchSequence} />
+          <UnreceivedAcksList portId={portId} channelId={channelId} sequence={searchSequence} />
         </>
       ) : null}
     </div>
