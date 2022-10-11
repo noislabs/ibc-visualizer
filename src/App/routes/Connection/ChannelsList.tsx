@@ -46,7 +46,7 @@ export function ChannelsList({ connectionId }: ChannelsListProps): JSX.Element {
 
   return channelsResponse?.channels?.length ? (
     <div>
-      <span className={style.title}>Channels</span>
+      <span className={style.subtitle}>Channels</span>
       <div className="flex flex-col flex-wrap">
         {channelsResponse.channels.map((channel, index) => {
           const portIdChannelId = `${channel.portId}${portIdChannelIdSeparator}${channel.channelId}`;
