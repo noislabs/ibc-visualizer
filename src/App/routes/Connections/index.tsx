@@ -17,7 +17,7 @@ export function Connections(): JSX.Element {
   const [connectionsResponse, setConnectionsResponse] = useState<IbcConnectionsResponse>();
 
   useEffect(() => {
-    (async function updateConnectionsResponse() {
+    (async () => {
       const connectionsResponse = await getClient().ibc.connection.connections();
       setConnectionsResponse(connectionsResponse);
 
