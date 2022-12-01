@@ -44,6 +44,10 @@ export function ConnectionData({ connectionId }: ConnectionDataProps): JSX.Eleme
             </td>
           </tr>
           <tr>
+            <td>Delay period</td>
+            <td>{connectionResponse.connection.delayPeriod.toString()}ns</td>
+          </tr>
+          <tr>
             <td>Counterparty</td>
             <td>
               {counterparty && (
