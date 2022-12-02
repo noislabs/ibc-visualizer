@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { portIdChannelIdSeparator } from "../..";
+import { useClient } from "../../../contexts/ClientContext";
+import { IbcChannelResponse } from "../../../types/ibc";
+import { printChannelName2 } from "../../../utils/ibc";
 import { Navigation } from "../../components/Navigation";
+import { style } from "../../style";
 import { AcknowledgementsList } from "./AcknowledgementsList";
 import { ChannelData } from "./ChannelData";
 import { CommitmentsList } from "./CommitmentsList";
@@ -19,21 +23,35 @@ interface ChannelParams {
 export function Channel(): JSX.Element {
   const { connectionId, portIdChannelId } = useParams<ChannelParams>();
   const [portId, channelId] = portIdChannelId.split(portIdChannelIdSeparator);
+  const { getClient } = useClient();
 
-  const [sequence, setSequence] = useState<number>();
+  const [searchSequence, setSearchSequence] = useState<number>();
+  const [channelResponse, setChannelResponse] = useState<IbcChannelResponse>();
+
+  useEffect(() => {
+    (async function updateChannelResponse() {
+      const channelResponse = await getClient().ibc.channel.channel(portId, channelId);
+      setChannelResponse(channelResponse);
+    })();
+  }, [getClient, portId, channelId]);
 
   return (
     <div className="container mx-auto">
       <Navigation />
-      <ChannelData portId={portId} channelId={channelId} />
+      <span className={style.title}>
+        {channelResponse && channelResponse.channel && printChannelName2(channelId, channelResponse.channel)}
+      </span>
+      {channelResponse && (
+        <ChannelData portId={portId} channelId={channelId} channelResponse={channelResponse} />
+      )}
       <NextSequenceReceiveData portId={portId} channelId={channelId} />
       <CommitmentsList connectionId={connectionId} portId={portId} channelId={channelId} />
       <AcknowledgementsList connectionId={connectionId} portId={portId} channelId={channelId} />
-      <SequenceForm sequence={sequence} setSequence={setSequence} />
-      {sequence ? (
+      <SequenceForm sequence={searchSequence} setSequence={setSearchSequence} />
+      {searchSequence !== undefined ? (
         <>
-          <UnreceivedPacketsList portId={portId} channelId={channelId} sequence={sequence} />
-          <UnreceivedAcksList portId={portId} channelId={channelId} sequence={sequence} />
+          <UnreceivedPacketsList portId={portId} channelId={channelId} sequence={searchSequence} />
+          <UnreceivedAcksList portId={portId} channelId={channelId} sequence={searchSequence} />
         </>
       ) : null}
     </div>
