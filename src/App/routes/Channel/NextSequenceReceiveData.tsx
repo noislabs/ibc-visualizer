@@ -11,9 +11,8 @@ interface NextSequenceReceiveDataProps {
 
 export function NextSequenceReceiveData({ portId, channelId }: NextSequenceReceiveDataProps): JSX.Element {
   const { getClient } = useClient();
-  const [nextSequenceReceiveResponse, setNextSequenceReceiveResponse] = useState<
-    IbcNextSequenceReceiveResponse
-  >();
+  const [nextSequenceReceiveResponse, setNextSequenceReceiveResponse] =
+    useState<IbcNextSequenceReceiveResponse>();
 
   useEffect(() => {
     (async function updateNextSequenceReceiveResponse() {
