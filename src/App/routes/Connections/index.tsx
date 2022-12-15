@@ -10,16 +10,40 @@ import { Navigation } from "../../components/Navigation";
 import { pathConnections } from "../../paths";
 import { style } from "../../style";
 
+interface MyTendermintClientState {
+  readonly chainId: string;
+  readonly lastClientUpdate: Date; // s
+}
 
 export function Connections(): JSX.Element {
   const { getIbcClient } = useClient();
 
   const [clientIds, setClientIds] = useState<string[]>([]);
+  const [clientStates, setClientStates] = useState<Map<string, MyTendermintClientState>>(
+    new Map<string, MyTendermintClientState>(),
+  );
   const [connectionsResponse, setConnectionsResponse] = useState<IbcConnectionsResponse>();
 
   useEffect(() => {
     (async () => {
-      const connectionsResponse = await getClient().ibc.connection.connections();
+      const states = new Map<string, MyTendermintClientState>();
+      for (const clientId of clientIds) {
+        const state = await getIbcClient().ibc.client.stateTm(clientId);
+        const lastClientUpdate =
+          (await getIbcClient().ibc.client.consensusStateTm(clientId)).timestamp?.seconds?.toNumber() ?? NaN;
+        const myState: MyTendermintClientState = {
+          chainId: state.chainId,
+          lastClientUpdate: new Date(lastClientUpdate * 1000),
+        };
+        states.set(clientId, myState);
+      }
+      setClientStates(states);
+    })();
+  }, [clientIds, getIbcClient]);
+
+  useEffect(() => {
+    (async () => {
+      const connectionsResponse = await getIbcClient().ibc.connection.connections();
       setConnectionsResponse(connectionsResponse);
 
       const nonEmptyClientIds =
@@ -80,6 +104,9 @@ export function Connections(): JSX.Element {
                     <div key={clientId} className="flex flex-col items-start">
                       <div>
                         <strong>Client {clientId}</strong>
+                        <br />
+                        {clientStates.get(clientId)?.chainId} last updated{" "}
+                        {clientStates.get(clientId)?.lastClientUpdate.toISOString()}
                       </div>
                       <ol>
                         {connectionsResponse.connections
