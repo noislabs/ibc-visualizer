@@ -16,17 +16,20 @@ interface CommitmentsListProps {
 export function CommitmentsList({ connectionId, portId, channelId }: CommitmentsListProps): JSX.Element {
   const paramConnection = `${pathConnections}/${connectionId}`;
 
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [commitments, setCommitments] = useState<"loading" | readonly PacketState[]>("loading");
 
   useEffect(() => {
     (async function updatePacketCommitmentsResponse() {
-      const packetCommitmentsResponse = await getClient().ibc.channel.allPacketCommitments(portId, channelId);
+      const packetCommitmentsResponse = await getIbcClient().ibc.channel.allPacketCommitments(
+        portId,
+        channelId,
+      );
       const comms = packetCommitmentsResponse.commitments;
       comms.sort((a, b) => a.sequence.comp(b.sequence));
       setCommitments(comms);
     })();
-  }, [getClient, portId, channelId]);
+  }, [getIbcClient, portId, channelId]);
 
   return (
     <>

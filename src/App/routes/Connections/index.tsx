@@ -10,8 +10,9 @@ import { Navigation } from "../../components/Navigation";
 import { pathConnections } from "../../paths";
 import { style } from "../../style";
 
+
 export function Connections(): JSX.Element {
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
 
   const [clientIds, setClientIds] = useState<string[]>([]);
   const [connectionsResponse, setConnectionsResponse] = useState<IbcConnectionsResponse>();
@@ -31,12 +32,12 @@ export function Connections(): JSX.Element {
 
       setClientIds(orderedClientIds);
     })();
-  }, [getClient]);
+  }, [getIbcClient]);
 
   async function loadMoreConnections(): Promise<void> {
     if (!connectionsResponse?.pagination?.nextKey?.length) return;
 
-    const newConnectionsResponse = await getClient().ibc.connection.connections(
+    const newConnectionsResponse = await getIbcClient().ibc.connection.connections(
       connectionsResponse.pagination.nextKey,
     );
 

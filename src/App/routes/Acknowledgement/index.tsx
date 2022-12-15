@@ -18,21 +18,21 @@ export function Acknowledgement(): JSX.Element {
   const { portIdChannelId, sequence } = useParams<AcknowledgementParams>();
   const [portId, channelId] = portIdChannelId.split(portIdChannelIdSeparator);
 
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [ackResponse, setAckResponse] = useState<IbcPacketAcknowledgementResponse>();
 
   useEffect(() => {
     const sequenceNumber = Number.parseInt(sequence, 10);
 
     (async function updateAckResponse() {
-      const ackResponse = await getClient().ibc.channel.packetAcknowledgement(
+      const ackResponse = await getIbcClient().ibc.channel.packetAcknowledgement(
         portId,
         channelId,
         sequenceNumber,
       );
       setAckResponse(ackResponse);
     })();
-  }, [sequence, getClient, portId, channelId]);
+  }, [sequence, getIbcClient, portId, channelId]);
 
   return (
     <div className="container mx-auto flex flex-col">

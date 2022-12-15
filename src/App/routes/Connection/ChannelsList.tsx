@@ -15,22 +15,22 @@ interface ChannelsListProps {
 export function ChannelsList({ connectionId }: ChannelsListProps): JSX.Element {
   const paramConnection = `${pathConnections}/${connectionId}`;
 
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [channelsResponse, setChannelsResponse] = useState<
     IbcChannelsResponse | IbcConnectionChannelsResponse
   >();
 
   useEffect(() => {
     (async function updateChannelsResponse() {
-      const channelsResponse = await getClient().ibc.channel.connectionChannels(connectionId);
+      const channelsResponse = await getIbcClient().ibc.channel.connectionChannels(connectionId);
       setChannelsResponse(channelsResponse);
     })();
-  }, [connectionId, getClient]);
+  }, [connectionId, getIbcClient]);
 
   async function loadMoreChannels(): Promise<void> {
     if (!channelsResponse?.pagination?.nextKey?.length) return;
 
-    const newChannelsResponse = await getClient().ibc.channel.connectionChannels(
+    const newChannelsResponse = await getIbcClient().ibc.channel.connectionChannels(
       connectionId,
       channelsResponse.pagination.nextKey,
     );

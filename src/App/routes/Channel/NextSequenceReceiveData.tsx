@@ -10,19 +10,19 @@ interface NextSequenceReceiveDataProps {
 }
 
 export function NextSequenceReceiveData({ portId, channelId }: NextSequenceReceiveDataProps): JSX.Element {
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [nextSequenceReceiveResponse, setNextSequenceReceiveResponse] =
     useState<IbcNextSequenceReceiveResponse>();
 
   useEffect(() => {
     (async function updateNextSequenceReceiveResponse() {
-      const nextSequenceReceiveResponse = await getClient().ibc.channel.nextSequenceReceive(
+      const nextSequenceReceiveResponse = await getIbcClient().ibc.channel.nextSequenceReceive(
         portId,
         channelId,
       );
       setNextSequenceReceiveResponse(nextSequenceReceiveResponse);
     })();
-  }, [getClient, portId, channelId]);
+  }, [getIbcClient, portId, channelId]);
 
   return nextSequenceReceiveResponse ? (
     <div className="flex flex-col m-2 ml-0">

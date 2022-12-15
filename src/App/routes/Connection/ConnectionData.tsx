@@ -12,15 +12,15 @@ interface ConnectionDataProps {
 }
 
 export function ConnectionData({ connectionId }: ConnectionDataProps): JSX.Element {
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [connectionResponse, setConnectionResponse] = useState<IbcConnectionResponse>();
 
   useEffect(() => {
     (async function updateConnectionResponse() {
-      const connectionResponse = await getClient().ibc.connection.connection(connectionId);
+      const connectionResponse = await getIbcClient().ibc.connection.connection(connectionId);
       setConnectionResponse(connectionResponse);
     })();
-  }, [getClient, connectionId]);
+  }, [getIbcClient, connectionId]);
 
   const counterparty = connectionResponse?.connection?.counterparty;
   return connectionResponse?.connection ? (

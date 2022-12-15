@@ -23,17 +23,17 @@ interface ChannelParams {
 export function Channel(): JSX.Element {
   const { connectionId, portIdChannelId } = useParams<ChannelParams>();
   const [portId, channelId] = portIdChannelId.split(portIdChannelIdSeparator);
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
 
   const [searchSequence, setSearchSequence] = useState<number>();
   const [channelResponse, setChannelResponse] = useState<IbcChannelResponse>();
 
   useEffect(() => {
     (async function updateChannelResponse() {
-      const channelResponse = await getClient().ibc.channel.channel(portId, channelId);
+      const channelResponse = await getIbcClient().ibc.channel.channel(portId, channelId);
       setChannelResponse(channelResponse);
     })();
-  }, [getClient, portId, channelId]);
+  }, [getIbcClient, portId, channelId]);
 
   return (
     <div className="container mx-auto">

@@ -11,17 +11,17 @@ interface UnreceivedAcksListProps {
 }
 
 export function UnreceivedAcksList({ portId, channelId, sequence }: UnreceivedAcksListProps): JSX.Element {
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [unreceivedAcksResponse, setUnreceivedAcksResponse] = useState<IbcUnreceivedAcksResponse>();
 
   useEffect(() => {
     (async function updateUnreceivedAcksResponse() {
-      const unreceivedAcksResponse = await getClient().ibc.channel.unreceivedAcks(portId, channelId, [
+      const unreceivedAcksResponse = await getIbcClient().ibc.channel.unreceivedAcks(portId, channelId, [
         sequence,
       ]);
       setUnreceivedAcksResponse(unreceivedAcksResponse);
     })();
-  }, [getClient, portId, channelId, sequence]);
+  }, [getIbcClient, portId, channelId, sequence]);
 
   return unreceivedAcksResponse?.sequences?.length ? (
     <div className="flex flex-col m-2 ml-0">

@@ -20,12 +20,12 @@ export function AcknowledgementsList({
 }: AcknowledgementsListProps): JSX.Element {
   const paramConnection = `${pathConnections}/${connectionId}`;
 
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [acknowledgements, setAcknowledgements] = useState<"loading" | readonly PacketState[]>("loading");
 
   useEffect(() => {
     (async function updatePacketAcknowledgementsResponse() {
-      const packetAcknowledgementsResponse = await getClient().ibc.channel.allPacketAcknowledgements(
+      const packetAcknowledgementsResponse = await getIbcClient().ibc.channel.allPacketAcknowledgements(
         portId,
         channelId,
       );
@@ -35,7 +35,7 @@ export function AcknowledgementsList({
       });
       setAcknowledgements(acks);
     })();
-  }, [getClient, portId, channelId]);
+  }, [getIbcClient, portId, channelId]);
 
   return (
     <>

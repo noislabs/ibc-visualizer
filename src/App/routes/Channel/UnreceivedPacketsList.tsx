@@ -15,17 +15,19 @@ export function UnreceivedPacketsList({
   channelId,
   sequence,
 }: UnreceivedPacketsListProps): JSX.Element {
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [unreceivedPacketsResponse, setUnreceivedPacketsResponse] = useState<IbcUnreceivedPacketsResponse>();
 
   useEffect(() => {
     (async function updateUnreceivedPacketsResponse() {
-      const unreceivedPacketsResponse = await getClient().ibc.channel.unreceivedPackets(portId, channelId, [
-        sequence,
-      ]);
+      const unreceivedPacketsResponse = await getIbcClient().ibc.channel.unreceivedPackets(
+        portId,
+        channelId,
+        [sequence],
+      );
       setUnreceivedPacketsResponse(unreceivedPacketsResponse);
     })();
-  }, [getClient, portId, channelId, sequence]);
+  }, [getIbcClient, portId, channelId, sequence]);
 
   return unreceivedPacketsResponse?.sequences?.length ? (
     <div className="flex flex-col m-2 ml-0">

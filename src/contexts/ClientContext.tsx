@@ -7,11 +7,15 @@ import { config } from "../config";
 export type IbcClient = QueryClient & IbcExtension;
 
 export interface ClientContextType {
-  readonly getClient: () => IbcClient;
+  readonly getIbcClient: () => IbcClient;
+  readonly getTmClient: () => Tendermint34Client;
 }
 
 const defaultClientContext: ClientContextType = {
-  getClient: (): IbcClient => {
+  getIbcClient: (): IbcClient => {
+    throw new Error("not yet initialized");
+  },
+  getTmClient: (): Tendermint34Client => {
     throw new Error("not yet initialized");
   },
 };
@@ -45,7 +49,10 @@ export function ClientProvider({ children }: React.HTMLAttributes<HTMLOrSVGEleme
   useEffect(() => {
     if (!tmClient || !ibcClient) return;
 
-    setValue({ getClient: () => ibcClient });
+    setValue({
+      getIbcClient: () => ibcClient,
+      getTmClient: () => tmClient,
+    });
     setClientsAvailable(true);
   }, [ibcClient, tmClient]);
 

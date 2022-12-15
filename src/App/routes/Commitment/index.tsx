@@ -18,21 +18,21 @@ export function Commitment(): JSX.Element {
   const { portIdChannelId, sequence } = useParams<CommitmentParams>();
   const [portId, channelId] = portIdChannelId.split(portIdChannelIdSeparator);
 
-  const { getClient } = useClient();
+  const { getIbcClient } = useClient();
   const [commitmentResponse, setCommitmentResponse] = useState<IbcPacketCommitmentResponse>();
 
   useEffect(() => {
     const sequenceNumber = Number.parseInt(sequence, 10);
 
     (async function updateCommitmentResponse() {
-      const commitmentResponse = await getClient().ibc.channel.packetCommitment(
+      const commitmentResponse = await getIbcClient().ibc.channel.packetCommitment(
         portId,
         channelId,
         sequenceNumber,
       );
       setCommitmentResponse(commitmentResponse);
     })();
-  }, [sequence, getClient, portId, channelId]);
+  }, [sequence, getIbcClient, portId, channelId]);
 
   return (
     <div className="container mx-auto flex flex-col">
