@@ -12,8 +12,11 @@ const configs: NetworkConfigs = {
   local: {
     rpcUrl: "http://localhost:26658",
   },
-  "nois-testnet-003": {
-    rpcUrl: "https://nois.rpc.bccnodes.com/",
+  "nois-1": {
+    rpcUrl: "https://rpc-nois.sr20de.xyz:443/",
+  },
+  "nois-testnet-005": {
+    rpcUrl: "https://nois-testnet-rpc.polkachu.com:443/",
   },
 };
 
