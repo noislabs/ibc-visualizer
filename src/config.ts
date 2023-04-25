@@ -13,7 +13,7 @@ const configs: NetworkConfigs = {
     rpcUrl: "http://localhost:26658",
   },
   "nois-1": {
-    rpcUrl: "https://rpc-nois.sr20de.xyz:443/",
+    rpcUrl: "https://rpc.cosmos.directory:443/nois",
   },
   "nois-testnet-005": {
     rpcUrl: "https://nois-testnet-rpc.polkachu.com:443/",
